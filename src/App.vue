@@ -4,21 +4,54 @@
 <template>
 
 <div>
-  <h2>Filename Input</h2>
+  <h2>Match Name</h2>
   <input
     v-model="filename"
     type="text"
-    placeholder="Enter filename"
+    placeholder="Enter matchname"
     @input="checkFilename"
   />
   <p v-if="showWarning" style="color: red;">
-    Warning: Filenames should not contain spaces!
+    Warning: Patch names should not contain spaces!
   </p>
 
 
-  <h2>Manual Quill in Vue 3</h2>
+  <h2>Match Description</h2>
   <div id="editor"></div>
-  <button @click="logContent">Log Content</button>
+  <button @click="logContent">Save and Verify</button>
+
+  <!-- Dynamic Rows -->
+  <div>
+  <h2>Dynamic Rows (Dropdown + Textbox)</h2>
+
+  <!-- Render each row -->
+  <div
+    class="row"
+    v-for="(row, index) in rows"
+    :key="index"
+  >
+    <select v-model="row.option">
+      <option value="" disabled>Select option</option>
+      <option value="Option 1">Option 1</option>
+      <option value="Option 2">Option 2</option>
+      <option value="Option 3">Option 3</option>
+    </select>
+
+    <input
+      v-model="row.text"
+      type="text"
+      placeholder="Enter text"
+    />
+
+    <button @click="removeRow(index)">Remove</button>
+  </div>
+
+  <button @click="addRow">Add Row</button>
+</div>
+
+
+
+
 </div>
 </template>
 
@@ -49,11 +82,28 @@ export default {
         placeholder: 'Type something...',
       })
     })
+
+    const rows = ref([
+  { option: '', text: '' } // Start with one row
+   ])
+
+   const addRow = () => {
+   rows.value.push({ option: '', text: '' })
+   }
+
+   const removeRow = (index) => {
+    rows.value.splice(index, 1)
+  }
+
+
     return {
       filename,
       showWarning,
       checkFilename,
-      logContent
+      logContent,
+      rows,
+      addRow,
+      removeRow
     }
   }
 }
@@ -63,6 +113,13 @@ export default {
 
 
 <style>
+
+.row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
 #editor {
   background: white;
   width: 70vw;         /* 70% of the screen width */
