@@ -60,6 +60,30 @@
   <p>{{ apiResponse }}</p>
 </div>
 
+<div>
+  <h2>Match Staging</h2>
+  <button @click="callApi1">Test Match</button>
+  <button @click="callApi1">Regress Test</button>
+  <button @click="callApi1">Release And Send to All</button>
+  <button @click="callApi1">Show Last Run Stage</button>
+  <button @click="callApi1">Show Queue</button>
+</div>
+
+
+
+<div class="date-time-widget">
+<h2>Match Date Range </h2>
+  <label for="date">Select Date:</label>
+  <input type="date" v-model="selectedDate" />
+
+  <label for="time" style="margin-left: 10px;">Select Time:</label>
+  <input type="time" v-model="selectedTime" />
+</div>
+
+<p>
+  Pick Up Changes Since: {{ selectedDate }} {{ selectedTime }}
+</p>
+
 </template>
 
 <script>
@@ -73,6 +97,8 @@ export default {
     const showWarning = ref(false)
     let quillInstance = null
     const apiResponse = ref('')
+    const selectedDate = ref('')
+    const selectedTime = ref('')
 
     const checkFilename = () => {
       showWarning.value = filename.value.includes(' ')
@@ -143,7 +169,9 @@ export default {
       addRow,
       removeRow,
       callApi,
-      apiResponse
+      apiResponse,
+      selectedDate,
+      selectedTime
     }
   }
 }
