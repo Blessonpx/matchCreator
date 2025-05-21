@@ -53,6 +53,13 @@
 
 
 </div>
+
+<div>
+  <h2>Call API Example</h2>
+  <button @click="callApi">Call API</button>
+  <p>{{ apiResponse }}</p>
+</div>
+
 </template>
 
 <script>
@@ -65,14 +72,17 @@ export default {
     const filename = ref('')
     const showWarning = ref(false)
     let quillInstance = null
+    const apiResponse = ref('')
 
     const checkFilename = () => {
       showWarning.value = filename.value.includes(' ')
     }
 
+
     const logContent = () => {
       if (quillInstance) {
         console.log('Quill content:', quillInstance.getText())
+        console.log('Quill content:', quillInstance.getContents())
       }
     }
 
@@ -96,6 +106,34 @@ export default {
   }
 
 
+  // api call 1
+  const callApi = async () => {
+    try {
+      const response = await fetch('http://localhost:9002/quill/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ insert: quillInstance.getText() ,
+          value: quillInstance.getContents()
+        })
+      })
+
+      const data = await response.json()
+
+      // Check if response is as expected
+      if (data.Message === 'Recieved') {
+        apiResponse.value = 'Recieved'
+      } else {
+        apiResponse.value = 'Unexpected response'
+      }
+    } catch (error) {
+      console.error('API error:', error)
+      apiResponse.value = 'Error'
+    }
+  }
+
+
     return {
       filename,
       showWarning,
@@ -103,7 +141,9 @@ export default {
       logContent,
       rows,
       addRow,
-      removeRow
+      removeRow,
+      callApi,
+      apiResponse
     }
   }
 }
