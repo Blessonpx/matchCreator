@@ -90,6 +90,7 @@
 import { onMounted,ref } from 'vue'
 import Quill from 'quill'
 import 'quill/dist/quill.snow.css'
+import config from './config.js'
 
 export default {
   setup() {
@@ -135,7 +136,7 @@ export default {
   // api call 1
   const callApi = async () => {
     try {
-      const response = await fetch('http://localhost:9002/quill/create', {
+      const response = await fetch(`${config.apiBaseUrl}/quill/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
